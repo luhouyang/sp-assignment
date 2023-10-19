@@ -122,11 +122,16 @@ int menuLinear(string choices[], int size) {
 
 // User
 #pragma region User
+typedef struct 
+{
+    string userName;
+    string password;
+    string secureQuestionAns;
+} USERMODEL;
+
 class User {
     private:
-        string userName;
-        string password;
-        string secureQuestionAns;
+        USERMODEL userModel;
     public:
         bool loggedIn = false;
         int userMenuIdx = 0;
@@ -172,30 +177,47 @@ void User::insert(string storeData) {
 void User::login() {
     system("cls");
     cout << "Enter user name: ";
-    cin >> userName;
+    cin >> userModel.userName;
     cout << "Enter password: ";
-    cin >> password;
+    cin >> userModel.password;
 }
 
 void User::signUp() {
     system("cls");
     cout << "Enter user name: ";
-    cin >> userName;
+    cin >> userModel.userName;
     cout << "Enter password: ";
-    cin >> password;
+    cin >> userModel.password;
     cout << "What is your favourite colour?: ";
-    cin >> secureQuestionAns;
-    insert(userName + "," + password + "," + secureQuestionAns);
+    cin >> userModel.secureQuestionAns;
+    insert(userModel.userName + "," + userModel.password + "," + userModel.secureQuestionAns);
 }
 
 void User::forgotPass() {
     system("cls");
     cout << "Enter user name: ";
-    cin >> userName;
+    cin >> userModel.userName;
     cout << "What is your favourite colour?: ";
-    cin >> secureQuestionAns;
+    cin >> userModel.secureQuestionAns;
 }
 #pragma endregion User
+
+// App
+#pragma region App
+typedef struct
+{
+    double price;
+    string productName;
+} PRODUCT;
+
+typedef struct
+{
+    int reportIdx;
+    char filterDateChar[9];
+    // strcpy(filterDateChar, filterDate.c_str());
+    string filterDate;
+} DAILYREPORT;
+#pragma endregion App
 
 // main
 int main(){
