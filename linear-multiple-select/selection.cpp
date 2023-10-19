@@ -20,6 +20,15 @@ void printPadding() {
     cout << "\n\n#############################################\n\n";
 }
 
+void insert(string storeData, string filePath) {
+    system("cls");
+    cout << storeData;
+    fstream file;
+    file.open(filePath, ios::app | ios::out);
+    file << storeData << "\n";
+    file.close();
+}
+
 int menuHorizontal() {
     int selectIdx = 1;      //Keeps track of which option is selected.
     int numChoices = 2;     //The number of choices we have.
@@ -132,12 +141,10 @@ typedef struct
 class User {
     private:
         USERMODEL userModel;
+        int userMenuIdx = 0;
     public:
         bool loggedIn = false;
-        int userMenuIdx = 0;
-
         void menu();
-        void insert(string storeData);
         void login();
         void signUp();
         void forgotPass();
@@ -165,15 +172,6 @@ void User::menu() {
         }
 }
 
-void User::insert(string storeData) {
-    system("cls");
-    cout << storeData;
-    fstream file;
-    file.open("userData.txt", ios::app | ios::out);
-    file << storeData << "\n";
-    file.close();
-}
-
 void User::login() {
     system("cls");
     cout << "Enter user name: ";
@@ -190,7 +188,7 @@ void User::signUp() {
     cin >> userModel.password;
     cout << "What is your favourite colour?: ";
     cin >> userModel.secureQuestionAns;
-    insert(userModel.userName + "," + userModel.password + "," + userModel.secureQuestionAns);
+    insert(userModel.userName + "," + userModel.password + "," + userModel.secureQuestionAns, "userData.txt");
 }
 
 void User::forgotPass() {
@@ -210,14 +208,35 @@ typedef struct
     string productName;
 } PRODUCT;
 
+class App {
+    private:
+        int appMainMenuIdx = 0;
+    public:
+        void menu();
+        void sellItem();
+        void buyItem();
+};
+
+void App::menu() {
+    string appMainMenuSelection[] = {"\tView Records\t\t--1--", "\tSell Item\t\t--2--", "\tBuy Item\t\t--3--", "\tLogout\t\t\t--4--"};
+    appMainMenuIdx = menuLinear(appMainMenuSelection, 4);
+}
+#pragma endregion App
+
+// ViewRecord
+#pragma region ViewRecord
 typedef struct
 {
-    int reportIdx;
-    char filterDateChar[9];
-    // strcpy(filterDateChar, filterDate.c_str());
-    string filterDate;
-} DAILYREPORT;
-#pragma endregion App
+} REPORT;
+
+class ViewReport {
+    private:
+        int reportIdx;
+    public:
+        void viewReportMenu();
+        void filterReport(string mode, char filterArgs[]);
+};
+#pragma endregion ViewRecord
 
 // main
 int main(){
@@ -225,10 +244,6 @@ int main(){
     while (!user.loggedIn) {
         user.menu();
     }
-
-    string shopMenuSelection[] = {"\tView Records\t\t--1--", "\tSell Item\t\t--2--", "\tBuy Item\t\t--3--", "\tLogout\t\t\t--4--"};
-    int shopMenuIdx = menuLinear(shopMenuSelection, 4);
-    cout << "Index Menu selected: " << shopMenuIdx;
 
     printPadding();
     cout << "\t\t--------------\n";
