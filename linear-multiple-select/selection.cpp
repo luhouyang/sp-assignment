@@ -218,7 +218,13 @@ class App {
 };
 
 void App::menu() {
-    string appMainMenuSelection[] = {"\tView Records\t\t--1--", "\tSell Item\t\t--2--", "\tBuy Item\t\t--3--", "\tLogout\t\t\t--4--"};
+    string appMainMenuSelection[] = 
+    {
+        "\tView Records\t\t--1--", 
+        "\tSell Item\t\t--2--", 
+        "\tBuy Item\t\t--3--", 
+        "\tLogout\t\t\t--4--"
+    };
     appMainMenuIdx = menuLinear(appMainMenuSelection, 4);
 }
 #pragma endregion App
@@ -232,10 +238,21 @@ typedef struct
 class ViewReport {
     private:
         int reportIdx;
+        int reportMenuIdx = 0;
     public:
         void viewReportMenu();
         void filterReport(string mode, char filterArgs[]);
 };
+
+void ViewReport::viewReportMenu() {
+    string viewReportSelection[] = 
+    {
+        "\tDaily Report\t\t--1--", 
+        "\tMonthly Report\t\t--2--", 
+        "\tYearly Report\t\t--3--", 
+        "\tBack To Menu\t--4--"
+    };
+}
 #pragma endregion ViewRecord
 
 // main
