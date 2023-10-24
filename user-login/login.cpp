@@ -404,13 +404,13 @@ void App::menu() {
     appMainMenuIdx = menuLinear(headerMessage, appMainMenuSelection, 4);
     switch (appMainMenuIdx) {
             case 0:
-                //login();
+                //
                 break;
             case 1:
-                //signUp();
+                //
                 break;
             case 2:
-                //forgotPass();
+                //
                 break;
             case 3:
                 exitApp = true;
@@ -419,7 +419,6 @@ void App::menu() {
                 cout << "\t\tInvalid Selection";
         }
 }
-
 #pragma endregion App
 
 // main
