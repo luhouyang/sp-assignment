@@ -42,7 +42,6 @@ string space2underscore(string text)
 
 void insert(string storeData, string filePath) {
     system("cls");
-    cout << storeData;
     fstream file;
     file.open(filePath, ios::app | ios::out);
     file << storeData << "\n";
@@ -266,10 +265,9 @@ void User::login() {
             if (row[2] == userModel.password) {
                 userID = row[0];
                 loggedIn = true;
-                file.close();
+                singleChoice("\t  Welcome back \033[1;92m" + row[1] + "\033[1;0m\n\n", "Next");
                 break;
             } else {
-                file.close();
                 singleChoice("\t\tWrong Password\n\n", "Return");
                 break;
             }
@@ -326,12 +324,12 @@ void User::signUp() {
         }
     }
     if (userExist) {
-        singleChoice("\t\tUser name already exist\n\n", "Return");
+        singleChoice("\tUser name already exist\n\n", "Return");
         file.close();
     } else {
         file.close();
         insert(to_string(newUserIdx) + "," + userModel.userName + "," + userModel.password + "," + userModel.secureQuestionAns, "userData.txt");
-        singleChoice("\t\tUser added\n\n", "Return");
+        singleChoice("\tWelcome aboard \033[1;92m" + userModel.userName + "\033[1;0m\n\tPlease login\n\n", "Next");
     }
 }
 
@@ -342,6 +340,7 @@ void User::forgotPass() {
 
     // declare variables before clearing screen
     bool userExist = false;
+    bool passChanged = false;
     string line;
     vector<string> row;
     fstream file;
@@ -385,6 +384,7 @@ void User::forgotPass() {
                 row[2] = userModel.password;
                 line = row[0] + "," + row[1] + "," + row[2] + "," + row[3] + "\n";
                 fout << line;
+                passChanged = true;
             } else {
                 // write unchanged data to temporary file
                 line += "\n";
@@ -397,14 +397,18 @@ void User::forgotPass() {
             fout << line;
         }
     }
-    if (!userExist) {
-        singleChoice("\t\tInvalid User Name\n\n", "Return");
-    }
     file.close();
     fout.close();
     // remove old file
     remove("userData.txt");
     rename("userDataTemp.txt", "userData.txt");
+    // messages
+    if (!userExist) {
+        singleChoice("\t\tInvalid User Name\n\n", "Return");
+    }
+    if (passChanged) {
+        singleChoice("\tSuccessfully changed password\n\n", "Next");
+    }
 }
 #pragma endregion User
 
@@ -466,7 +470,7 @@ int main(){
             app.userID = user.userID;   // can use userID locally in app
         }
         while (user.loggedIn) {
-            singleChoice("\t\tUser ID: " + app.userID + "\n", "Next");
+            //singleChoice("\t\tUser ID: " + app.userID + "\n", "Next");
             app.menu();
             if (app.exitApp) {
                 user.loggedIn = false;
