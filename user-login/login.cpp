@@ -260,9 +260,9 @@ void User::login() {
             //cout << p << endl;
             p = strtok(NULL, ",");
         }
-        if (row[0] == userModel.userName) {
+        if (row[1] == userModel.userName) {
             userExist = true;
-            if (row[1] == userModel.password) {
+            if (row[2] == userModel.password) {
                 loggedIn = true;
                 file.close();
                 break;
@@ -283,6 +283,14 @@ void User::signUp() {
     // reset info
     userModel.userName = "";
     userModel.password = "";
+    userID = 0;
+
+    // declare variables before clearing screen
+    bool userExist = false;
+    string line;
+    vector<string> row;
+    fstream file;
+    file.open("userData.txt");
 
     // input
     system("cls");
@@ -292,14 +300,37 @@ void User::signUp() {
     getline(cin, userModel.password);
     cout << "What is your favourite colour?: ";
     getline(cin, userModel.secureQuestionAns);
-    
-    insert(
-        space2underscore(userModel.userName) 
-        + "," 
-        + space2underscore(userModel.password) 
-        + "," 
-        + space2underscore(userModel.secureQuestionAns),
-        "userData.txt");
+
+    userModel.userName = space2underscore(userModel.userName);
+    userModel.password = space2underscore(userModel.password);
+    userModel.secureQuestionAns = space2underscore(userModel.secureQuestionAns);
+
+    // check each line in file
+    while(file>>line && !loggedIn) {
+        userID++;
+        row.clear();
+        char* s = new char[line.length() + 1];
+        strcpy(s, line.c_str());
+        char * p;
+        p = strtok(s, ",");
+        while (p != NULL) {
+            row.push_back(p);
+            //cout << p << endl;
+            p = strtok(NULL, ",");
+        }
+        if (row[1] == userModel.userName) {
+            userExist = true;
+            break;
+        }
+    }
+    if (userExist) {
+        backText("\t\tUser name already exist\n\n");
+        file.close();
+    } else {
+        file.close();
+        insert(to_string(userID) + "," + userModel.userName + "," + userModel.password + "," + userModel.secureQuestionAns, "userData.txt");
+        backText("\t\tUser added\n\n");
+    }
 }
 
 void User::forgotPass() {
@@ -340,17 +371,17 @@ void User::forgotPass() {
             p = strtok(NULL, ",");
         }
         // check user name
-        if (row[0] == userModel.userName) {
+        if (row[1] == userModel.userName) {
             userExist = true;
             // check secure phrase
-            if (row[2] == userModel.secureQuestionAns) {
+            if (row[3] == userModel.secureQuestionAns) {
                 // get new password
                 cout << "Enter new password: ";
                 getline(cin, userModel.password);
                 userModel.password = space2underscore(userModel.password);
                 // write new data to temporary file
-                row[1] = userModel.password;
-                line = row[0] + "," + row[1] + "," + row[2] + "\n";
+                row[2] = userModel.password;
+                line = row[0] + "," + row[1] + "," + row[2] + "," + row[3] + "\n";
                 fout << line;
             } else {
                 // write unchanged data to temporary file
@@ -388,7 +419,7 @@ class App {
         int appMainMenuIdx = 0;
     public:
         bool exitApp = false;
-        int userID;
+        string userID;
         void menu();
 };
 
@@ -429,7 +460,7 @@ int main(){
         user.menu();
         if (user.loggedIn) {
             app.exitApp = false;
-            app.userID = user.userID;   // can use userID locally in app
+            app.userID = to_string(user.userID);   // can use userID locally in app
         }
         while (user.loggedIn) {
             app.menu();
