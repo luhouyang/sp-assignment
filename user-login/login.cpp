@@ -17,14 +17,15 @@
 using namespace std;
 
 /* Utils Documentation
-printPadding() -> "\n\n#############################################\n\n"
-space2underscore() -> makes life easier, no need to deal with spaces
-insert(string storeData, string filePath);
-menuHorizontal() -> "<---prev            next--->" :: use left/right arrows
+printPadding()                                      -> "\n\n#############################################\n\n"
+space2underscore()                                  -> makes life easier, no need to deal with spaces
+insert(string storeData, string filePath)
+singleChoice(string headerMessage,string colourText)-> show one message, with one choice
+menuHorizontal()                                    -> "<---prev            next--->" :: use left/right arrows
 menuLinear(string headerMessage, string choices[], int size)
-->  headerMessage: about page (e.g. "\tWelcome to the Login Page")
-->  choices[]: what you can do in menu (e.g. {"\tLogin\t\t\t--1--", "\tSign Up\t\t\t--2--", "\tForgot Password\t\t--3--", "\tExit\t\t\t--4--"})
-->  size: length of choices[]
+                                                    ->  headerMessage: about page (e.g. "\tWelcome to the Login Page")
+                                                    ->  choices[]: what you can do in menu (e.g. {"\tLogin\t\t\t--1--", "\tSign Up\t\t\t--2--", "\tForgot Password\t\t--3--", "\tExit\t\t\t--4--"})
+                                                    ->  size: length of choices[]
 */
 
 // Utils
@@ -48,10 +49,10 @@ void insert(string storeData, string filePath) {
     file.close();
 }
 
-void backText(string headerMessage) {
+void singleChoice(string headerMessage, string colourText) {
     bool selecting = true;
     printPadding();
-    cout << headerMessage << "\t\t\033[1;36mBack\033[1;0m";
+    cout << headerMessage << "\t\t\033[1;36m" << colourText << "\033[1;0m";
     printPadding();
     cout << "press \"Enter\" to select";
     char32_t key;
@@ -196,7 +197,7 @@ class User {
         int userMenuIdx = 0;
     public:
         bool loggedIn = false;
-        int userID;
+        string userID;
         void menu();
         void login();
         void signUp();
@@ -204,7 +205,7 @@ class User {
 };
 
 void User::menu() {
-    //system("cls");
+    system("cls");
     string headerMessage = "\tWelcome to the Login Page";
     string userAuthSelection[] = {"\tLogin\t\t\t--1--", "\tSign Up\t\t\t--2--", "\tForgot Password\t\t--3--", "\tExit\t\t\t--4--"};
     userMenuIdx = menuLinear(headerMessage, userAuthSelection, 4);
@@ -263,18 +264,19 @@ void User::login() {
         if (row[1] == userModel.userName) {
             userExist = true;
             if (row[2] == userModel.password) {
+                userID = row[0];
                 loggedIn = true;
                 file.close();
                 break;
             } else {
                 file.close();
-                backText("\t\tWrong Password\n\n");
+                singleChoice("\t\tWrong Password\n\n", "Return");
                 break;
             }
         }
     }
     if (!userExist) {
-        backText("\t\tInvalid User Name\n\n");
+        singleChoice("\t\tInvalid User Name\n\n", "Return");
     }
     file.close();
 }
@@ -283,10 +285,10 @@ void User::signUp() {
     // reset info
     userModel.userName = "";
     userModel.password = "";
-    userID = 0;
 
     // declare variables before clearing screen
     bool userExist = false;
+    int newUserIdx = 0;
     string line;
     vector<string> row;
     fstream file;
@@ -307,7 +309,7 @@ void User::signUp() {
 
     // check each line in file
     while(file>>line && !loggedIn) {
-        userID++;
+        newUserIdx++;
         row.clear();
         char* s = new char[line.length() + 1];
         strcpy(s, line.c_str());
@@ -324,12 +326,12 @@ void User::signUp() {
         }
     }
     if (userExist) {
-        backText("\t\tUser name already exist\n\n");
+        singleChoice("\t\tUser name already exist\n\n", "Return");
         file.close();
     } else {
         file.close();
-        insert(to_string(userID) + "," + userModel.userName + "," + userModel.password + "," + userModel.secureQuestionAns, "userData.txt");
-        backText("\t\tUser added\n\n");
+        insert(to_string(newUserIdx) + "," + userModel.userName + "," + userModel.password + "," + userModel.secureQuestionAns, "userData.txt");
+        singleChoice("\t\tUser added\n\n", "Return");
     }
 }
 
@@ -387,7 +389,7 @@ void User::forgotPass() {
                 // write unchanged data to temporary file
                 line += "\n";
                 fout << line;
-                backText("\t\tWrong Answer\n\n");
+                singleChoice("\t\tWrong Answer\n\n", "Return");
             }
         } else {
             // write unchanged data to temporary file
@@ -396,7 +398,7 @@ void User::forgotPass() {
         }
     }
     if (!userExist) {
-        backText("\t\tInvalid User Name\n\n");
+        singleChoice("\t\tInvalid User Name\n\n", "Return");
     }
     file.close();
     fout.close();
@@ -424,6 +426,7 @@ class App {
 };
 
 void App::menu() {
+    system("cls");
     string headerMessage = "\tWelcome to the Main Menu";
     string appMainMenuSelection[] = 
     {
@@ -460,9 +463,10 @@ int main(){
         user.menu();
         if (user.loggedIn) {
             app.exitApp = false;
-            app.userID = to_string(user.userID);   // can use userID locally in app
+            app.userID = user.userID;   // can use userID locally in app
         }
         while (user.loggedIn) {
+            singleChoice("\t\tUser ID: " + app.userID + "\n", "Next");
             app.menu();
             if (app.exitApp) {
                 user.loggedIn = false;
