@@ -22,6 +22,7 @@ using namespace std;
 
 // donut
 #pragma region Donut
+string msg = "\n\t\t\t\033[1;36mPress any key to start app\033[1;0m";
 string colors[]={"\033[1;0m","\033[1;1m\033[1;33m","\033[1;33m",
 "\033[1;1m\033[1;31m","\033[1;31m","\033[1;1m\033[1;32m","\033[1;32m","\033[1;1m\033[1;36m",
 "\033[1;36m","\033[1;1m\033[1;34m","\033[1;34m","\033[1;1m\033[1;35m","\033[1;35m"};
@@ -37,7 +38,7 @@ void Donut(){system("cls");
     while(!kbhit()){
         memset(b,32,1760);
         memset(z,0,7040);
-        cout<<"\n\t\t\t\033[1;36mPress any key to start app\033[1;0m";
+        cout<<msg;
         cout<<colors[clr%11];
         clr++;
         for(j=0;j<6.28;j+=0.07){
@@ -65,16 +66,16 @@ void Donut(){system("cls");
     cout<<"\033[1;0m";
 }
 */
+
 void Donut(){system("cls");int clr=0;float A=0,B=0;float i,j;int k;float z[1760];
 char b[1760];cout<<"\x1b[2J";while(!kbhit()){memset(b,32,1760);memset(z,0,7040);
-cout<<"\n\t\t\t\033[1;36mPress any key to start app\033[1;0m";cout<<colors[clr%11]
-;clr++;for(j=0;j<6.28;j+=0.07){for(i=0;i<6.28;i+=0.02){float c=sin(i);float d=cos(j)
-;float e=sin(A);float f=sin(j);float g=cos(A);float h=d+2;float D=1/(c*h*e+f*g+5);
-float l=cos(i);float m=cos(B);float n=sin(B);float t=c*h*g-f*e;int x=40+30*D*(l*h*
-m-t*n);int y=12+15*D*(l*h*n+t*m);int o=x+80*y;int N=8*((f*e-c*d*g)*m-c*d*e-f*g-l*d
-*n);if(22>y&&y>0&&x>0&&80>x&&D>z[o]){z[o]=D;b[o]=".,-~:;=!*#$@"[N>0?N:0];}}}cout<<
-"\x1b[H";for(k=0;k<1761;k++){putchar(k%80?b[k]:10);A+=0.00004;B+=0.00002;}usleep(30000);
-}cout<<"\033[1;0m";}
+cout<<msg;cout<<colors[clr%11];clr++;for(j=0;j<6.28;j+=0.07){for(i=0;i<6.28;i+=
+0.02){float c=sin(i);float d=cos(j);float e=sin(A);float f=sin(j);float g=cos(A);
+float h=d+2;float D=1/(c*h*e+f*g+5);float l=cos(i);float m=cos(B);float n=sin(B);
+float t=c*h*g-f*e;int x=40+30*D*(l*h*m-t*n);int y=12+15*D*(l*h*n+t*m);int o=x+80*
+y;int N=8*((f*e-c*d*g)*m-c*d*e-f*g-l*d*n);if(22>y&&y>0&&x>0&&80>x&&D>z[o]){z[o]=
+D;b[o]=".,-~:;=!*#$@"[N>0?N:0];}}}cout<<"\x1b[H";for(k=0;k<1761;k++){putchar(k%80
+?b[k]:10);A+=0.00004;B+=0.00002;}usleep(30000);}cout<<"\033[1;0m";}
 #pragma endregion Donut
 
 /* Utils Documentation
